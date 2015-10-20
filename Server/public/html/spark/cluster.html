@@ -1,0 +1,490 @@
+
+
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="UTF-8">
+    <meta name="google" value="notranslate">
+
+
+    <title>VoxBox 1</title>
+    
+	<script src="/socket.io/socket.io.js"></script>
+		<script src='//cdnjs.cloudflare.com/ajax/libs/d3/3.3.3/d3.min.js'></script>
+
+		<script type="text/javascript">
+
+
+
+		var mechanical;
+
+		var electrical;
+
+		var biochemical;
+
+		var civil;
+
+		var software;
+
+		var aerospace;
+
+
+
+		var socket = io.connect();    
+
+		socket.on('sparkAdviceResults', function(data){
+
+			result = JSON.parse(data)
+
+						
+
+			mechanical = Math.floor(result.mechanical);
+
+			electrical = Math.floor(result.electrical);
+
+			biochemical = Math.floor(result.biochemical);
+
+			civil = Math.floor(result.civil);
+
+			software = Math.floor(result.software);
+
+			aerospace = Math.floor(result.aerospace);
+
+			
+
+			showGauge();
+
+		});
+
+	
+
+		</script>
+
+		
+		
+    
+        <style>
+				@font-face {
+				font-family: "digi";
+				src: url('/ttf/DS-DIGI.TTF'); /* IE */
+				src: local("digi"), url('/ttf/DS-DIGI.TTF') format("truetype"); /* non-IE browsers */
+				} 
+				
+				/*@font-face {
+					color: #fff;
+					font-family: 'digi';
+					src: url('http://cssdeck.com/uploads/resources/fonts/digii/DS-DIGII.TTF');
+				}*/
+				
+				body {
+					background-color: #000000;
+					color: #fff;
+					font-family: 'digi', sans-serif;
+				}
+				
+				p {
+					text-align: center;
+					font-size: 3em;
+				}
+				
+				a, a:visited, a:hover {
+					color: #fff;
+				}
+				
+				.left {
+					width: 10%;
+					float: left;
+					/*height: 100px;*/
+				}
+				
+				.middle {
+					width: 80%;
+					float: left;
+					/*height: 100px;*/
+					
+				}
+				
+				.right {
+					width: 10%;
+					float: left;
+					/*height: 100px;*/
+					
+				}
+				
+				.p_fullwidth {
+					width: 100%;
+					
+				}
+				
+				.button_left_a {
+					float: right;
+				}
+				
+				
+				
+				.button_left {
+					margin-top: 200px;
+					top: 500px;
+					height: 48px;
+					
+					width: 48px;
+					text-align: center;
+					background-color: #ffffff;
+					color: #000;
+					font-size: 3em;
+					border-radius: 50%;
+					float: right;
+				}
+				
+				.button_right_a {
+					float: left;
+				}
+				
+				.button_right {
+					margin-top: 200px;
+					top: 500px;
+					height: 48px;
+					width: 48px;
+					text-align: center;
+					background-color: #ffffff;
+					color: #000;
+					font-size: 3em;
+					border-radius: 50%;
+					float: right;
+				}
+				
+				.p_bottom {
+					font-size: 1.5em;
+				}
+				
+				.p_anno_left {
+					margin-left: 50px;
+					margin-top: 0px;
+					padding-top: 0px;
+					float: left;
+					font-size: 2em;
+				}
+				
+				.p_anno_right {
+					margin-right: 50px;
+					margin-top: 0px;
+					padding-top: 0px;
+					float: right;
+				}
+				
+      .chart-gauge {
+  			width: 550px;
+				height: 370px;
+  			margin: 50px auto;
+				
+			}
+
+			.chart-color1 {
+  			fill: #27a9e1;
+			}
+
+			.chart-color2 {
+ 			 fill: #fff100;
+		 }
+
+		 .chart-color3 {
+			 fill: #fff100;
+		 }
+
+		 .chart-color4 {
+			 fill: #fff100;
+		 }
+
+		 .needle,
+		 .needle-center {
+			 fill: #ffffff;
+		 }
+		 
+		 .circle_ce {
+		 	 color: #8c564b;
+	 	 }
+		 
+		 .circle_me {
+			 color: #d62728;
+		 }
+		 
+		 .circle_be {
+			 color: #1f77b4;
+		 }
+		 
+		 .circle_se {
+			 color: #ff7f0e;
+		 }
+		 
+		 .circle_ee {
+			 color: #2ca02c;
+		 }
+		 
+		 .circle_ae {
+			 color: #9467bd;
+		 }
+		 
+	/*	 .block_me {
+			 margin-top: 5px;
+			 height: 20px;
+			 width: 20px;
+			 margin-right: 10px;
+			 line-height: 1.5em;
+			 background-color: blue;
+			 border-radius: 50%;
+			 padding-top: ;*/
+		 }
+
+    </style>
+		
+    <script src='//cdnjs.cloudflare.com/ajax/libs/d3/3.3.3/d3.min.js'></script>
+		
+
+    <script>
+  window.console = window.console || function(t) {};
+  window.open = function(){ console.log("window.open is disabled."); };
+  window.print   = function(){ console.log("window.print is disabled."); };
+</script>
+
+    
+    
+  </head>
+
+  <body>
+		
+		
+		
+		<p class="p_fullwidth">People here are more into:</p>
+		
+
+		
+		<div class="left">
+			<a class="button_left_a" href="fill.html"><p class="button_left">&lt;</p></a>
+		</div>
+
+		<div class="middle">
+			<!--<a href=""><div class="button_left">&lt;</div></a>-->
+			<div class="chart-gauge">
+			</div>
+				
+				        <script>
+				var width = 550, //960
+				    height = 370,
+				    padding = 2.5, // separation between same-color circles
+				    clusterPadding = 8, // separation between different-color circles
+				    minRadius = 10,
+						maxRadius = 10;
+
+				var n = 100, // total number of circles
+				    m = 6; // number of distinct clusters
+
+			//	var color = d3.scale.category10()
+				//    .domain(d3.range(m));
+						
+		//				var color = d3.scale.ordinal()
+			//			  .domain(["mechanical", "electrical", "biochemical", "civil", "software", "aerospace"])
+				//		  .range(["#d62728", "#2ca02c" , "#1f77b4", "#8c564b", "#ff7f0e", "#9467bd"]);	
+							
+							
+							
+						
+
+				// The largest node for each cluster.
+				var clusters = new Array(m);
+				
+				var nodes = [];
+
+
+
+				var force = d3.layout.force()
+
+				    .nodes(nodes)
+
+				    .size([width, height])
+
+				    .gravity(.01)
+
+				    .charge(0)
+
+				    .on("tick", tick)
+
+				    .start();
+
+//				var nodes = d3.range(n).map(function() {
+//				  var i = Math.floor(Math.random() * m),//Math.floor(Math.random() * m),
+//				      r = 12, //Math.sqrt((i + 1) / m * -Math.log(Math.random())) * maxRadius,
+//				      d = {cluster: i, radius: r};
+//				  if (!clusters[i] || (r > clusters[i].radius)) clusters[i] = d;
+//				  return d;
+//				});
+
+					function showGauge(){
+					
+					nodes = [];
+
+					for(var i=0; i < mechanical; i++) {
+					    nodes.push({ 
+					        "cluster" : 1,
+					        "radius"  : 10,
+									"color"		: "#d62728"
+					    });
+					}
+					
+					for(var i=0; i < electrical; i++) {
+					    nodes.push({ 
+					        "cluster" : 2,
+					        "radius"  : 10,
+									"color"		: "#2ca02c"
+								
+					    });
+					}
+					
+					for(var i=0; i < biochemical; i++) {
+					    nodes.push({ 
+					        "cluster" : 3,
+					        "radius"  : 10,
+									"color"		: "#1f77b4"
+					    });
+					}
+					
+					for(var i=0; i < civil; i++) {
+					    nodes.push({ 
+					        "cluster" : 4,
+					        "radius"  : 10,
+									"color"		: "#8c564b"
+					    });
+					}
+					
+					for(var i=0; i < software; i++) {
+					    nodes.push({ 
+					        "cluster" : 5,
+					        "radius"  : 10,
+									"color"		: "#ff7f0e"
+					    });
+					}
+					
+					for(var i=0; i < aerospace; i++) {
+					    nodes.push({ 
+					        "cluster" : 6,
+					        "radius"  : 10,
+									"color"		: "#9467bd"
+					    });
+					}
+					
+				nodes.forEach(function(d) { clusters[d.cluster] = d; });
+
+				force = d3.layout.force()
+				    .nodes(nodes)
+				    .size([width, height])
+				    .gravity(.01)
+				    .charge(0)
+				    .on("tick", tick)
+				    .start();
+						
+				circle = svg.selectAll("circle")
+				    .data(nodes)
+				  .enter().append("circle")
+				    .attr("r", function(d) { return d.radius; })
+				    .style("fill", function(d) { return d.color; }) // color(d.cluster)
+				    .call(force.drag);
+						
+			}
+			
+
+				var svg = d3.select(".chart-gauge").append("svg")
+				    .attr("width", width)
+				    .attr("height", height);
+
+				var circle = svg.selectAll("circle")
+				    .data(nodes)
+				  .enter().append("circle")
+				    .attr("r", function(d) { return d.radius; })
+				    .style("fill", function(d) { return d.cluster; }) // color(d.cluster)
+				    .call(force.drag);
+
+				function tick(e) {
+				  circle
+				      .each(cluster(10 * e.alpha * e.alpha))
+				      .each(collide(.5))
+				      .attr("cx", function(d) { return d.x; })
+				      .attr("cy", function(d) { return d.y; });
+				}
+
+				// Move d to be adjacent to the cluster node.
+				function cluster(alpha) {
+				  return function(d) {
+				    var cluster = clusters[d.cluster];
+				    if (cluster === d) return;
+				    var x = d.x - cluster.x,
+				        y = d.y - cluster.y,
+				        l = Math.sqrt(x * x + y * y),
+				        r = d.radius + cluster.radius;
+				    if (l != r) {
+				      l = (l - r) / l * alpha;
+				      d.x -= x *= l;
+				      d.y -= y *= l;
+				      cluster.x += x;
+				      cluster.y += y;
+				    }
+				  };
+				}
+
+				// Resolves collisions between d and all other circles.
+				function collide(alpha) {
+				  var quadtree = d3.geom.quadtree(nodes);
+				  return function(d) {
+				    var r = d.radius + maxRadius + Math.max(padding, clusterPadding),
+				        nx1 = d.x - r,
+				        nx2 = d.x + r,
+				        ny1 = d.y - r,
+				        ny2 = d.y + r;
+				    quadtree.visit(function(quad, x1, y1, x2, y2) {
+				      if (quad.point && (quad.point !== d)) {
+				        var x = d.x - quad.point.x,
+				            y = d.y - quad.point.y,
+				            l = Math.sqrt(x * x + y * y),
+				            r = d.radius + quad.point.radius + (d.cluster === quad.point.cluster ? padding : clusterPadding);
+				        if (l < r) {
+				          l = (l - r) / l * alpha;
+				          d.x -= x *= l;
+				          d.y -= y *= l;
+				          quad.point.x += x;
+				          quad.point.y += y;
+				        }
+				      }
+				      return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
+				    });
+				  };
+				}
+				    </script>
+
+    
+				    <script>
+				  if (document.location.search.match(/type=embed/gi)) {
+				    window.parent.postMessage("resize", "*");
+				  }
+				</script>
+			
+			<p class="p_fullwidth p_bottom"><span class="circle_ce">&#9679;</span> civil <span class="circle_me">&#9679;</span> mechanical <span class="circle_se">&#9679;</span> software <br/> <span class="circle_ae">&#9679;</span> aerospace <span class="circle_be">&#9679;</span> biomedical <span class="circle_ee">&#9679;</span> electrical </p>
+			<!--<p class="p_anno_right">music</p>-->
+		</div>
+		
+		<div class="right">
+			<!--<a href=""><div class="button_left">&lt;</div></a>-->
+			<a class="button_right_a" href="gauge2.html"><p class="button_right">&gt;</p></a>
+		</div>
+
+			
+		
+		
+		
+		
+      <script src="//assets.codepen.io/assets/common/stopExecutionOnTimeout-6c99970ade81e43be51fa877be0f7600.js"></script>
+
+
+ 
+
+    
+  </body>
+</html>
+ 

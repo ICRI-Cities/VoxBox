@@ -1,0 +1,315 @@
+
+
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="UTF-8">
+    <meta name="google" value="notranslate">
+
+
+    <title>VoxBox 1</title>
+    
+				<script src="/socket.io/socket.io.js"></script>
+				<script src='//cdnjs.cloudflare.com/ajax/libs/d3/3.3.3/d3.min.js'></script>
+    
+				<script type="text/javascript">
+
+				var preferDoing;
+
+				var socket = io.connect();    
+				socket.on('sparkSliderResults', function(data){
+					result = JSON.parse(data)
+					preferDoing = result.thinking/100;
+					showGauge(preferDoing);
+				});
+		
+				</script>
+    
+    
+        <style>
+				@font-face {
+				font-family: "digi";
+				src: url('/ttf/DS-DIGI.TTF'); /* IE */
+				src: local("digi"), url('/ttf/DS-DIGI.TTF') format("truetype"); /* non-IE browsers */
+				} 
+				
+				/*@font-face {
+					color: #fff;
+					font-family: 'digi';
+					src: url('http://cssdeck.com/uploads/resources/fonts/digii/DS-DIGII.TTF');
+				}*/
+				
+				body {
+					background-color: #000000;
+					color: #fff;
+					font-family: 'digi', sans-serif;
+				}
+				
+				p {
+					text-align: center;
+					font-size: 3em;
+				}
+				
+				a, a:visited, a:hover {
+					color: #fff;
+				}
+				
+				.left {
+					width: 10%;
+					float: left;
+					/*height: 100px;*/
+				}
+				
+				.middle {
+					width: 80%;
+					float: left;
+					/*height: 100px;*/
+					
+				}
+				
+				.right {
+					width: 10%;
+					float: left;
+					/*height: 100px;*/
+					
+				}
+				
+				.p_fullwidth {
+					width: 100%;
+					
+				}
+				
+				.button_left_a {
+					float: right;
+				}
+				
+				
+				
+				.button_left {
+					margin-top: 200px;
+					top: 500px;
+					height: 48px;
+					
+					width: 48px;
+					text-align: center;
+					background-color: #ffffff;
+					color: #000;
+					font-size: 3em;
+					border-radius: 50%;
+					float: right;
+				}
+				
+				.button_right_a {
+					float: left;
+				}
+				
+				.button_right {
+					margin-top: 200px;
+					top: 500px;
+					height: 48px;
+					width: 48px;
+					text-align: center;
+					background-color: #ffffff;
+					color: #000;
+					font-size: 3em;
+					border-radius: 50%;
+					float: right;
+				}
+				
+				.p_anno_left {
+					margin-left: 50px;
+					margin-top: 0px;
+					padding-top: 0px;
+					float: left;
+				}
+				
+				.p_anno_right {
+					margin-right: 50px;
+					margin-top: 0px;
+					padding-top: 0px;
+					float: right;
+				}
+				
+      .chart-gauge {
+  			width: 550px;
+				height: 370px;
+  			margin: 50px auto;
+				
+			}
+
+			.chart-color1 {
+  			fill: #008900;
+			}
+
+			.chart-color2 {
+ 			 fill: #fff100;
+		 }
+
+		 .chart-color3 {
+			 fill: #fff100;
+		 }
+
+		 .chart-color4 {
+			 fill: #fff100;
+		 }
+
+		 .needle,
+		 .needle-center {
+			 fill: #ffffff;
+		 }
+
+    </style>
+
+    <script>
+  window.console = window.console || function(t) {};
+  window.open = function(){ console.log("window.open is disabled."); };
+  window.print   = function(){ console.log("window.print is disabled."); };
+</script>
+
+    
+    
+  </head>
+
+  <body>
+		
+		
+		
+		<p class="p_fullwidth">People here are more into:</p>
+		
+
+		<div class="left">
+			<a class="button_left_a" href="fill4.html"><p class="button_left">&lt;</p></a>
+		</div>
+
+		<div class="middle">
+			<!--<a href=""><div class="button_left">&lt;</div></a>-->
+			<div class="chart-gauge">
+			</div>
+			<p class="p_anno_left">doing</p>
+			<p class="p_anno_right">thinking</p>
+		</div>
+		
+		<div class="right">
+			<!--<a href=""><div class="button_left">&lt;</div></a>-->
+			<a class="button_right_a" href="gauge.html"><p class="button_right">&gt;</p></a>
+		</div>		
+		
+    <script src="//assets.codepen.io/assets/common/stopExecutionOnTimeout-6c99970ade81e43be51fa877be0f7600.js"></script>
+
+    <script src='//cdnjs.cloudflare.com/ajax/libs/d3/3.3.3/d3.min.js'></script>
+
+        <script>
+		
+		
+		
+		
+		var chart;
+		var el;
+
+		function showGauge(preferDoing){
+			needle.animateOn(chart, preferDoing);
+		}
+
+		var Needle = function () {
+        function Needle(len, radius1) {
+            this.len = len;
+            this.radius = radius1;
+        }
+        Needle.prototype.drawOn = function (el, perc) {
+            el.append('circle').attr('class', 'needle-center').attr('cx', 0).attr('cy', 0).attr('r', this.radius);
+            return el.append('path').attr('class', 'needle').attr('d', this.mkCmd(perc));
+        };
+        Needle.prototype.animateOn = function (el, perc) {
+            var self;
+            self = this;
+            return el.transition().delay(500).ease('elastic').duration(3000).selectAll('.needle').tween('progress', function () {
+                return function (percentOfPercent) {
+                    var progress;
+                    progress = percentOfPercent * perc;
+                    return d3.select(this).attr('d', self.mkCmd(progress));
+                };
+            });
+        };
+        Needle.prototype.mkCmd = function (perc) {
+            var centerX, centerY, leftX, leftY, rightX, rightY, thetaRad, topX, topY;
+            thetaRad = percToRad(perc / 2);
+            centerX = 0;
+            centerY = 0;
+            topX = centerX - this.len * Math.cos(thetaRad);
+            topY = centerY - this.len * Math.sin(thetaRad);
+            leftX = centerX - this.radius * Math.cos(thetaRad - Math.PI / 2);
+            leftY = centerY - this.radius * Math.sin(thetaRad - Math.PI / 2);
+            rightX = centerX - this.radius * Math.cos(thetaRad + Math.PI / 2);
+            rightY = centerY - this.radius * Math.sin(thetaRad + Math.PI / 2);
+            return 'M ' + leftX + ' ' + leftY + ' L ' + topX + ' ' + topY + ' L ' + rightX + ' ' + rightY;
+        };
+        return Needle;
+    }();
+    var needle = new Needle(230, 20);
+
+    var percToDeg = function (perc) {
+        return perc * 360;
+    };
+    var percToRad = function (perc) {
+        return degToRad(percToDeg(perc));
+    };
+    var degToRad = function (deg) {
+        return deg * Math.PI / 180;
+    };
+
+		
+		
+      (function() {
+    var /*Needle,*/ arc, arcEndRad, arcStartRad, barWidth, /*chart,*/ chartInset, /*degToRad, el,*/ endPadRad, height, i, margin, /*needle, */numSections, padRad, /*percToDeg, percToRad,*/ percent, radius, ref, sectionIndx, sectionPerc, startPadRad, svg, totalPercent, width;
+    percent = preferDoing;
+    barWidth = 40;
+    numSections = 1;
+    sectionPerc = 1 / numSections / 2;
+    padRad = 0.05;
+    chartInset = 10;
+    totalPercent = 0.75;
+    el = d3.select('.chart-gauge');
+    margin = {
+        top: 5,
+        right: 0,
+        bottom: -200,
+        left: 0
+    };
+    width = el[0][0].offsetWidth - margin.left - margin.right;
+    height = width;
+    radius = Math.min(width, height) / 2;
+    
+    svg = el.append('svg').attr('width', width + margin.left + margin.right).attr('height', height + margin.top + margin.bottom);
+    chart = svg.append('g').attr('transform', 'translate(' + (width + margin.left) / 2 + ', ' + (height + margin.top) / 2 + ')');
+    for (sectionIndx = i = 1, ref = numSections; 1 <= ref ? i <= ref : i >= ref; sectionIndx = 1 <= ref ? ++i : --i) {
+        if (window.CP.shouldStopExecution(1)) {
+            break;
+        }
+        arcStartRad = percToRad(totalPercent);
+        arcEndRad = arcStartRad + percToRad(sectionPerc);
+        totalPercent += sectionPerc;
+        startPadRad = sectionIndx === 0 ? 0 : padRad / 2;
+        endPadRad = sectionIndx === numSections ? 0 : padRad / 2;
+        arc = d3.svg.arc().outerRadius(radius - chartInset).innerRadius(radius - chartInset - barWidth).startAngle(arcStartRad + startPadRad).endAngle(arcEndRad - endPadRad);
+        chart.append('path').attr('class', 'arc chart-color' + sectionIndx).attr('d', arc);
+    }
+    window.CP.exitedLoop(1);
+   
+    needle.drawOn(chart, 0);
+    
+    
+}.call(this));
+      //@ sourceURL=pen.js
+    </script>
+
+    
+    <script>
+  if (document.location.search.match(/type=embed/gi)) {
+    window.parent.postMessage("resize", "*");
+  }
+</script>
+
+    
+  </body>
+</html>
+ 
