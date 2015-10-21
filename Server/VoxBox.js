@@ -195,12 +195,9 @@ function processPhone(date, time, data){
 /**
  * Constructor
  */
-var VoxBox = function(db){
-    this.db = db;
-}
+var VoxBox = function(){};
 
 VoxBox.prototype.HandleInput = function(socket, data){
-    console.log("Voxbox handling input: "+data);
 
     if (data == "p"){
         handlePing();
