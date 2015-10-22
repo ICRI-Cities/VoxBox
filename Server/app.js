@@ -2,7 +2,7 @@
  * Created by sarahg on 16/10/15.
  */
 
-var httpPort = 5432;
+var httpPort = 6543;
 var netPort = 4321;
 
 var express= require('express');
