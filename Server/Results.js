@@ -4,7 +4,7 @@
 
 var Database = require('./Database');
 var db = new Database();
-var dbName = "voxdb";
+var dbName = "voxDB";
 
 var queries = require('./Queries');
 

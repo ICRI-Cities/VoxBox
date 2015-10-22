@@ -6,7 +6,7 @@ var mysql = require('mysql');
 
 var host = 'localhost';
 var user = 'root';
-var pswrd = 'root';
+var pswrd = 'Jsu7dpxq';
 
 /**
  * @constructor
